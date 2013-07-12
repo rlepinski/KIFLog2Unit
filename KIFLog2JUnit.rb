@@ -30,9 +30,13 @@ class Testcase
   	end
 
   	def self.readLine(log)
-  		line = log.readline.strip
-		line.slice! line.scan(LINE_STRIP_REGEX).join("") if line =~ LINE_STRIP_REGEX
-		line
+  		begin
+	  		line = log.readline.strip
+			line.slice! line.scan(LINE_STRIP_REGEX).join("") if line =~ LINE_STRIP_REGEX
+			return line
+		rescue 
+			return nil
+		end
 	end
 
   	def self.parseNextTestScenario(log)
@@ -41,6 +45,8 @@ class Testcase
 
   		while divider_counter < 4 do
   			line = readLine(log)
+
+  			break unless line
 
 			if line.end_with?("-----------") 
 				divider_counter = divider_counter + 1
