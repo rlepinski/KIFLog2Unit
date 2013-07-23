@@ -89,17 +89,20 @@ class Testcase
 	end
 
   	def self.fromLog(input_file)
+  		tests = Array.new
+
   		log = File.open(input_file)
 
 		#Find the start of the actual log by searching for the BEGIN KIF TEST RUN message
 		first_line = readLine(log)
-		until first_line =~ /BEGIN KIF TEST RUN/ do
+		until !first_line || first_line =~ /BEGIN KIF TEST RUN/ do
 				first_line = readLine(log)
 		end
 
+		return tests unless first_line
+
 		n_scenarios = first_line.scan(/[\d]+/)[0].to_i;
 
-		tests = Array.new
 		1.upto(n_scenarios) do
 			tests << parseNextTestScenario(log)
 		end
